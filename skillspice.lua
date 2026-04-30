@@ -77,6 +77,16 @@ local function DropSave()
 		warp(WorldOven, IdDoorWorldOven)
 	end
 end
+
+ function wait_mele()
+    getBot().custom_status =  "wait_mele"
+         sleep(7000)
+     while getBot().malady == 0 do
+        --getBot():getConsole():append("`2[ACTION] getBot().malady : 0")
+         sleep(27000)
+     end
+ end
+ bot.auto_malady.enabled = true
 while true do
     while bot.status ~= 1 do 
         sleep(50 )
@@ -91,29 +101,29 @@ while true do
         while bot:getWorld():getTile(bot.x,bot.y).fg ~= 4618 and bot.status ==1   do
             for i,tile in pairs(getTiles()) do 
                 if tile.fg == 4618 then
-                    bot:findPath(tile.x,tile.y)
+                    bot:findPath(tile.x-1,tile.y)
                     break
                 end
             end
         end
         while bot:getWorld():getTile(bot.x,bot.y).fg == 4618 and bot.status ==1   or IsItTimeToTake() == false  and bot.status ==1   do
-           oven(0,0,7014) -- cosmic
+           oven(1,0,7014) -- cosmic
             sleep(16700)
-            lace(0,0,3472) -- rice 
+            lace(1,0,3472) -- rice 
             sleep(33300)           
-            lace(0,0,4602) -- onion
+            lace(1,0,4602) -- onion
             sleep(500)
-            lace(0,0,4568) -- salt
+            lace(1,0,4568) -- salt
             sleep(500)
-            lace(0,0,4572) -- Sugar
+            lace(1,0,4572) -- Sugar
             sleep(500)
-            lace(0,0,4570) -- ppper
+            lace(1,0,4570) -- ppper
             sleep(30500)
-            lace(0,0,868) -- milk
+            lace(1,0,868) -- milk
             sleep(3300)
-            lace(0,0,962) -- tomato
+            lace(1,0,962) -- tomato
             sleep(30000)
-            punch(0,0) -- punch
+            punch(1,0) -- punch
         end
         DropSave()
     end
