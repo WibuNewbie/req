@@ -64,11 +64,11 @@ local function IsItTimeToTake()
     return false
 end
 local function DropSave()
-    while findItem(6912) > 0 do 
-        while bot:getWorld().name ~= WorldSave:upper() or bot:getWorld():getTile(bot.x, bot.y).fg == 6 do
+    while findItem(6912) > 0 and bot.status ==1   do 
+        while bot:getWorld().name ~= WorldSave:upper() and bot.status ==1   or bot:getWorld():getTile(bot.x, bot.y).fg == 6  and bot.status ==1  do
 			warp(WorldSave, IdDoorWorldSave)
 		end
-        while findItem(6912) >0 do 
+        while findItem(6912) >0 and bot.status ==1   do 
             bot:drop(6912,findItem(6912))
             sleep(5000)
         end
@@ -78,14 +78,17 @@ local function DropSave()
 	end
 end
 while true do
-    while IsItTimeToTake() do
+    while bot.status ~= 1 do 
+        sleep(50 )
+    end 
+    while IsItTimeToTake() and bot.status ==1  do
         TakeItem()
     end
-    while IsItTimeToTake() == false do
-        while bot:getWorld().name ~= WorldOven:upper() or bot:getWorld():getTile(bot.x, bot.y).fg == 6 do
+    while IsItTimeToTake() == false and bot.status ==1   do
+        while bot:getWorld().name ~= WorldOven:upper() and bot.status ==1   or bot:getWorld():getTile(bot.x, bot.y).fg == 6 and bot.status ==1     do
 		    warp(WorldOven, IdDoorWorldOven)
 	    end
-        while bot:getWorld():getTile(bot.x,bot.y).fg ~= 4618 do
+        while bot:getWorld():getTile(bot.x,bot.y).fg ~= 4618 and bot.status ==1   do
             for i,tile in pairs(getTiles()) do 
                 if tile.fg == 4618 then
                     bot:findPath(tile.x,tile.y)
@@ -93,7 +96,7 @@ while true do
                 end
             end
         end
-        while bot:getWorld():getTile(bot.x,bot.y).fg == 4618 or IsItTimeToTake() == false  do
+        while bot:getWorld():getTile(bot.x,bot.y).fg == 4618 and bot.status ==1   or IsItTimeToTake() == false  and bot.status ==1   do
            oven(0,0,7014) -- cosmic
             sleep(16700)
             lace(0,0,3472) -- rice 
