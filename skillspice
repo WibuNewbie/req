@@ -1,0 +1,117 @@
+WorldTakeBahan = ""
+IdDoorWorldTakebahan = ""
+WorldOven = ""
+IdDoorWorldOven = ""
+WhenToDrophasil = 5 
+WorldSave = ""
+IdDoorWorldSave = ""
+local bot = getBot() 
+local arrayItemTotake = {7014,3472,4602,868,962,4572,4570,4566}
+bot:setInterval(Action.move,0.025)
+bot:setInterval(Action.collect,0.025)
+local function warp(world,door)
+       bot:warp(world,door)
+       sleep(math.random(3,6)*1000)
+      while bot.status ~= 1 do
+          sleep(50)
+       end
+end
+local function lace(id,x,y)
+      bot:place(bot.x+x,bot.y+y,id)
+end
+local function findItem(item)
+     return bot:getInventory():findItem(item)
+end
+local function punch(x,y)
+      bot:hit(bot.x + x, bot.y + y)
+end
+
+local function oven(x,y,itemid)
+    bot:sendPacket(2,"action|dialog_return\ndialog_name|oven\ntilex|"..(getBot().x+x).."|\ntiley|"..(getBot.y+y).."|\ncookthis|"..itemid.."|\nbuttonClicked|low\n\ndisplay_timer|0")
+    sleep(500)
+end
+local function TakeObject(ids)
+	for _, obj in pairs(getObjects()) do
+        if obj.id == ids then
+            bot:findPath(math.floor(obj.x/32),math.floor(obj.y/32))
+            sleep(50)
+            bot:collectObject(obj.oid,5)
+            if findItem(ids) > 0 then
+                break
+            end
+        end
+	end
+end
+local function TakeItem()
+	for i = 1, # arrayItemTotake do
+		if findItem(arrayItemTotake[i]) == 0 then
+			while bot:getWorld().name ~= WorldTakeBahan:upper() or bot:getWorld():getTile(bot.x, bot.y).fg == 6 do
+				warp(WorldTakeBahan, IdDoorWorldTakebahan)
+			end
+			TakeObject(arrayItemTotake[i])
+		end
+	end
+	while bot:getWorld().name ~= WorldOven:upper() or bot:getWorld():getTile(bot.x, bot.y).fg == 6 do
+		warp(WorldOven, IdDoorWorldOven)
+	end
+end
+local function IsItTimeToTake()
+    for i = 1, # arrayItemTotake do
+		if findItem(arrayItemTotake[i]) == 0 then
+			return true
+		end
+	end
+    return false
+end
+local function DropSave()
+    while findItem(6912) > 0 do 
+        while bot:getWorld().name ~= WorldSave:upper() or bot:getWorld():getTile(bot.x, bot.y).fg == 6 do
+			warp(WorldSave, IdDoorWorldSave)
+		end
+        while findItem(6912) >0 do 
+            bot:drop(6912,findItem(6912))
+            sleep(5000)
+        end
+    end
+    while bot:getWorld().name ~= WorldOven:upper() or bot:getWorld():getTile(bot.x, bot.y).fg == 6 do
+		warp(WorldOven, IdDoorWorldOven)
+	end
+end
+while true do
+    while IsItTimeToTake() do
+        TakeItem()
+    end
+    while IsItTimeToTake() == false do
+        while bot:getWorld().name ~= WorldOven:upper() or bot:getWorld():getTile(bot.x, bot.y).fg == 6 do
+		    warp(WorldOven, IdDoorWorldOven)
+	    end
+        while bot:getWorld():getTile(bot.x,bot.y).fg ~= 4618 do
+            for i,tile in pairs(getTiles()) do 
+                if tile.fg == 4618 then
+                    bot:findPath(tile.x,tile.y)
+                    break
+                end
+            end
+        end
+        while bot:getWorld():getTile(bot.x,bot.y).fg == 4618 or IsItTimeToTake() == false  do
+           oven(0,0,7014) -- cosmic
+            sleep(16700)
+            lace(0,0,3472) -- rice 
+            sleep(33300)           
+            lace(0,0,4602) -- onion
+            sleep(500)
+            lace(0,0,4568) -- salt
+            sleep(500)
+            lace(0,0,4572) -- Sugar
+            sleep(500)
+            lace(0,0,4570) -- ppper
+            sleep(30500)
+            lace(0,0,868) -- milk
+            sleep(3300)
+            lace(0,0,962) -- tomato
+            sleep(30000)
+            punch(0,0) -- punch
+        end
+        DropSave()
+    end
+end
