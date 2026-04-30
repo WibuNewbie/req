@@ -64,11 +64,11 @@ local function IsItTimeToTake()
     return false
 end
 local function DropSave()
-    while findItem(6912) > 0 and bot.status ==1   do 
+    while findItem(6912) > WhenToDrophasil and bot.status ==1   do 
         while bot:getWorld().name ~= WorldSave:upper() and bot.status ==1   or bot:getWorld():getTile(bot.x, bot.y).fg == 6  and bot.status ==1  do
 			warp(WorldSave, IdDoorWorldSave)
 		end
-        while findItem(6912) >0 and bot.status ==1   do 
+        while findItem(6912) > WhenToDrophasil and bot.status ==1   do 
             bot:drop(6912,findItem(6912))
             sleep(5000)
         end
