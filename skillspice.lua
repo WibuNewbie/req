@@ -88,7 +88,7 @@ end
  end
  bot.auto_malady.enabled = true
  local function getProgress()
-	return bot:getWorld():getTile(bot.x, bot.y).progress
+	return bot:getWorld():getTile(bot.x+1, bot.y).progress or -1
 end
 while true do
 	while bot.status ~= 1 do
