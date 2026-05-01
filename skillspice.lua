@@ -64,11 +64,11 @@ local function IsItTimeToTake()
     return false
 end
 local function DropSave()
-    while findItem(6912) > WhenToDrophasil and bot.status ==1   do 
+    while findItem(6912) > 0 and bot.status ==1   do 
         while bot:getWorld().name ~= WorldSave:upper() and bot.status ==1   or bot:getWorld():getTile(bot.x, bot.y).fg == 6  and bot.status ==1  do
 			warp(WorldSave, IdDoorWorldSave)
 		end
-        while findItem(6912) > WhenToDrophasil and bot.status ==1   do 
+        while findItem(6912) >0 and bot.status ==1   do 
             bot:drop(6912,findItem(6912))
             sleep(5000)
         end
@@ -87,44 +87,71 @@ end
      end
  end
  bot.auto_malady.enabled = true
+ local function getProgress()
+	return bot:getWorld():getTile(bot.x, bot.y).progress
+end
 while true do
-    while bot.status ~= 1 do 
-        sleep(50 )
-    end 
-    while IsItTimeToTake() and bot.status ==1  do
-        TakeItem()
-    end
-    while IsItTimeToTake() == false and bot.status ==1   do
-        while bot:getWorld().name ~= WorldOven:upper() and bot.status ==1   or bot:getWorld():getTile(bot.x, bot.y).fg == 6 and bot.status ==1     do
-		    warp(WorldOven, IdDoorWorldOven)
-	    end
-        while bot:getWorld():getTile(bot.x,bot.y).fg ~= 4618 and bot.status ==1   do
-            for i,tile in pairs(getTiles()) do 
-                if tile.fg == 4618 then
-                    bot:findPath(tile.x-1,tile.y)
-                    break
-                end
-            end
-        end
-        while bot:getWorld():getTile(bot.x,bot.y).fg == 4618 and bot.status ==1   or IsItTimeToTake() == false  and bot.status ==1   do
-           oven(1,0,7014) -- cosmic
-            sleep(16700)
-            lace(1,0,3472) -- rice 
-            sleep(33300)           
-            lace(1,0,4602) -- onion
-            sleep(500)
-            lace(1,0,4568) -- salt
-            sleep(500)
-            lace(1,0,4572) -- Sugar
-            sleep(500)
-            lace(1,0,4570) -- ppper
-            sleep(30500)
-            lace(1,0,868) -- milk
-            sleep(3300)
-            lace(1,0,962) -- tomato
-            sleep(30000)
-            punch(1,0) -- punch
-        end
-        DropSave()
-    end
+	while bot.status ~= 1 do
+		sleep(50)
+	end
+	while IsItTimeToTake() and bot.status == 1 do
+		TakeItem()
+	end
+	while IsItTimeToTake() == false and bot.status == 1 do
+		while bot:getWorld().name ~= WorldOven:upper() and bot.status == 1 or bot:getWorld():getTile(bot.x, bot.y).fg == 6 and bot.status == 1 do
+			warp(WorldOven, IdDoorWorldOven)
+		end
+		while bot:getWorld():getTile(bot.x, bot.y).fg ~= 4618 and bot.status == 1 do
+			for i, tile in pairs(getTiles()) do
+				if tile.fg == 4618 then
+					bot:findPath(tile.x - 1, tile.y)
+					break
+				end
+			end
+		end
+		while bot:getWorld():getTile(bot.x, bot.y).fg == 4618 and bot.status == 1 or IsItTimeToTake() == false and bot.status == 1 do
+			while getProgress() == 0 do
+				oven(1, 0, 7014) -- cosmic
+				sleep(500)
+			end
+			sleep(16200)
+			while getProgress() == 1 do
+				lace(1, 0, 3472) -- rice
+				sleep(500)
+			end
+			sleep(32800)
+			while getProgress() == 2 do
+				lace(1, 0, 4602) -- onion
+				sleep(500)
+			end
+			while getProgress() == 3 do
+				lace(1, 0, 4568) -- salt
+				sleep(500)
+			end
+			while getProgress() == 4 do
+				lace(1, 0, 4572) -- Sugar
+				sleep(500)
+			end
+			while getProgress() == 5 do
+				lace(1, 0, 4570) -- ppper
+				sleep(500)
+			end
+			sleep(30000)
+			while getProgress() == 6 do
+				lace(1, 0, 868) -- milk
+				sleep(500)
+			end
+			sleep(2800)
+			while getProgress() == 7 do
+				lace(1, 0, 962) -- tomato
+				sleep(500)
+			end
+			sleep(29500)
+			while getProgress() == 8 do
+				punch(1, 0) -- punch
+				sleep(500)
+			end
+		end
+		DropSave()
+	end
 end
